@@ -3,7 +3,7 @@ import requests as r
 import re
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
 from django.core import serializers
 
 from .models import Media, Genre, Providers, Torrents
@@ -110,6 +110,10 @@ def add_plex(request):
     return JsonResponse(data, safe=False)
 
 def list_to_download(request):
-    media = Torrents.objects.filter(status="READY")
-    data = serializers.serialize('json', media, fields=('pk', 'title'))
-    return HttpResponse(data)
+    auth_key = request.headers.get("AUTH_KEY")
+    
+    if auth_key == SECRET_KEY:
+        media = Torrents.objects.filter(status="READY")
+        data = serializers.serialize('json', media, fields=('pk', 'title'))
+        return HttpResponse(data)
+    return HttpResponse('Unauthorized', status=401)
