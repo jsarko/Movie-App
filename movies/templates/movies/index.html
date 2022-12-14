@@ -2,6 +2,14 @@
 {% load app_extras %}
 {% block content %}
     <style>
+        .modal-content p {
+            font-family: arial;
+        }
+        .card-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
         img {
             height: 220px;
         }
@@ -144,18 +152,39 @@
                     <span class="card-title activator white-text">{{item.title}}</span>
                 </div>
                 <div class="card-reveal black">
-                    <span class="card-title white-text text-darken-4">{{item.title}}<i class="material-icons right">close</i></span>
+                    <p>{{item.title}}</p>
+                    <span class="card-title white-text text-darken-4 btn-floating btn-small grey darken-4 card-close">
+                        <i class="material-icons ">close</i>
+                    </span>
                     {% for p in item.providers.all %}
                     <img src="{{p.logo}}" alt="" style="height:40px;">
+                    {% empty %}
+                    <label>Not available to stream</label>
                     {% endfor %}
                     <img class="{% if item.on_plex is False %}plex{% endif %}" id="{{item.imdbID}}_img" src="https://zhf1943ap1t4f26r11i05c7l-wpengine.netdna-ssl.com/wp-content/uploads/2018/01/pmp-icon-1.png" alt="" style="height:40px;" onclick="add_to_plex('{{item.imdbID}}')">
-                    <p>{{item.runtime}}</p>
-                    <a href="#" data-target="slide-out" class="sidenav-trigger" onclick="torrent('{{item.title}}')">Search Torrents</a>
+                    <p>
+                        <i class="material-icons white-text text-darken-3 left">access_time</i>
+                        <span style="margin-left:-0.7em">{{item.runtime|toMinutesAndHours}}</span>
+                    </p>
+                    <a href="#" data-target="slide-out" class="sidenav-trigger" onclick="torrent('{{item.title}}')"><i class="material-icons yellow-text text-darken-3">file_download</i></a>
+                    <a href="#info-modal" onclick="infoModal('{{item.title}}', '{{item.plot}}')"><i class="material-icons yellow-text text-darken-3 right bottom">info</i></a>
                 </div>
             </div>
         {% endfor %}
     </div>
     {% endif %}
+
+<!-- Info Modal -->
+
+<div id="info-modal" class="modal blue-grey darken-4">
+    <div class="modal-content">
+        <h4 id="info-modal-title"></h4>
+        <p id="info-modal-plot"></p>
+    </div>
+    <div class="modal-footer blue-grey darken-4">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat yellow-text text-darken-3">Close</a>
+    </div>
+</div>
 
 
 <!-- Side Nav -->
@@ -173,7 +202,13 @@
         <!-- <li><a class="subheader">Subheader</a></li> -->
       </ul>
 <!--  End side nav -->
-    <script>
+<script>
+    function infoModal(title, plot){
+        $('#info-modal-title').html(title);
+        $('#info-modal-plot').html(plot);
+        $('.modal').modal('open');
+
+    }
 
     function torrent(title){
         console.log(title);

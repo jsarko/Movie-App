@@ -1,4 +1,6 @@
 from django import template
+import math
+import re
 
 register = template.Library()
 
@@ -9,3 +11,11 @@ def compare_genre(value, arg):
         if value in g.name:
             return True
     return False
+
+@register.filter
+def toMinutesAndHours(value):
+    # Use regex to extract numbers from string
+    totalMinutes = int(value.replace(' min', ''))
+    hours = math.floor(int(totalMinutes) / 60);
+    minutes = totalMinutes % 60;
+    return f'{hours}:{minutes}';
