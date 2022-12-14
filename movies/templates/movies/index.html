@@ -157,7 +157,7 @@
                         <i class="material-icons ">close</i>
                     </span>
                     {% for p in item.providers.all %}
-                    <img src="{{p.logo}}" alt="" style="height:40px;">
+                    <img src="{{p.logo}}" alt="{{p.name}}" style="height:40px;">
                     {% empty %}
                     <label>Not available to stream</label>
                     {% endfor %}
