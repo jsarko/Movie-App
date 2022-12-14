@@ -35,7 +35,6 @@ class Media(models.Model):
     rating = models.CharField(max_length=10)
     media_type = models.CharField(max_length=30)
     providers = models.ManyToManyField(Providers)
-    on_plex = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.title} - {self.year}"
