@@ -1,4 +1,4 @@
-from helpers import getPageSoup, extractRarbgDetails
+from movies.utilities.helpers import getPageSoup, extract1337xDetails
 
 class Scraper:
     def __init__(self, url: str):
@@ -10,16 +10,14 @@ class Scraper:
     def list(self, limit=5) -> list:
         return self.get_listset()[:limit]
 
-class RargbScrapper(Scraper):
+class Scrapper1337x(Scraper):
     def get_listset(self) -> list:
         ls = []
         for item in self.soup.find_all("tr"):
-            details = extractRarbgDetails(item)
+            details = extract1337xDetails(item)
             if details:    
                 ls.append(details)
         return ls
 
 # Avoiding detection
 # https://www.zenrows.com/blog/stealth-web-scraping-in-python-avoid-blocking-like-a-ninja#rotating-proxies
-
-print(RargbScrapper("https://www.1377x.to/search/The%20Irishman/1/").list())

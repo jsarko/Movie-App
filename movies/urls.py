@@ -8,4 +8,5 @@ urlpatterns = [
     path('add', views.add, name='add'),
     path('add_to_plex', views.add_plex, name='add_plex'),
     path('download', views.list_to_download, name="list_to_download"),
+    path('torrents/1337x', views.list_create_1337x_torrents, name="list_1337x"),
 ]

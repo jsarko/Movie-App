@@ -1,12 +1,15 @@
 from urllib import parse
 import requests as r
-import re
+import re, json
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
 from django.core import serializers
 
 from .models import Media, Genre, Providers, Torrents
+
+from movies.utilities.scrappers import Scrapper1337x
+from movies.utilities.helpers import get1337xSearchUrl
 
 
 
@@ -117,3 +120,13 @@ def list_to_download(request):
         data = serializers.serialize('json', media, fields=('pk', 'title'))
         return HttpResponse(data)
     return HttpResponse('Unauthorized', status=401)
+
+def list_create_1337x_torrents(request):
+    media_title = request.GET.get('title')
+    search_url = get1337xSearchUrl(media_title)
+    torrents = Scrapper1337x(url=search_url).list()
+    # TODO: Use serializer
+    return JsonResponse(
+        torrents, 
+        safe=False
+    )
