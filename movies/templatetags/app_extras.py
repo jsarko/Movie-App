@@ -15,7 +15,10 @@ def compare_genre(value, arg):
 @register.filter
 def toMinutesAndHours(value):
     # Use regex to extract numbers from string
-    totalMinutes = int(value.replace(' min', ''))
-    hours = math.floor(int(totalMinutes) / 60);
-    minutes = totalMinutes % 60;
+    try:
+        totalMinutes = int(value.replace(' min', ''))
+        hours = math.floor(int(totalMinutes) / 60);
+        minutes = totalMinutes % 60;
+    except ValueError:
+        hours, minutes = "N/A", "N/A"
     return f'{hours}:{minutes}';

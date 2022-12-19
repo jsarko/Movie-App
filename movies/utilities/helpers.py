@@ -32,7 +32,7 @@ def extract1337xDetails(item: BeautifulSoup) -> dict:
         return None
     
     # Build details dict
-    details['name'] = (name_tag[0].get_text())
+    details['title'] = (name_tag[0].get_text())
     details['seeds'] = seed_tag[0].get_text()
     details['size'] = size_tag[0].get_text()
     details['torrent_url'] = name_tag[0].get('href')

@@ -1,6 +1,7 @@
 from urllib import parse
 import requests as r
 import re, json
+import ast
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
@@ -53,19 +54,24 @@ def lookup(request):
 def add(request):
     from .just_watch_api import get_providers
     params = ''
+    if request.method == 'POST':
+        dict_str = request.body.decode("UTF-8")
+        data = ast.literal_eval(dict_str)
+    else:
+        data = request.GET
 
-    title = request.GET.get('title')
-    year = request.GET.get('year')
-    runtime = request.GET.get('runtime')
-    genre = request.GET.get('genre').split(', ')
-    plot = request.GET.get('plot')
-    poster = request.GET.get('poster')
-    rated = request.GET.get('rated')
-    director = request.GET.get('director')
-    actors = request.GET.get('actors')
-    rating = request.GET.get('rating')
-    media_type = request.GET.get('media_type')
-    imdbID = request.GET.get('imdbID')
+    title = data.get('title')
+    year = data.get('year')
+    runtime = data.get('runtime')
+    genre = data.get('genre').split(', ')
+    plot = data.get('plot')
+    poster = data.get('poster')
+    rated = data.get('rated')
+    director = data.get('director')
+    actors = data.get('actors')
+    rating = data.get('rating')
+    media_type = data.get('media_type')
+    imdbID = data.get('imdbID')
     try:
         media, created = Media.objects.get_or_create(
             imdbID=imdbID,
@@ -102,7 +108,7 @@ def add(request):
         print(e)
         params = f'?error={e}'
 
-    return HttpResponseRedirect(f'/movies{params}')
+    return HttpResponse(status=204)
 
 
 def add_plex(request):
