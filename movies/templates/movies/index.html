@@ -333,6 +333,7 @@
         return response.json;
       } else {
         console.log("Promise Rejected");
+        M.toast({ html: "Failed to add Movie. Fuck if I know why.", classes: "red" });
         return Promise.reject(response);
       }
     };
