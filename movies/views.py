@@ -4,13 +4,14 @@ import re, json
 import ast
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.core import serializers
 
 from .models import Media, Genre, Providers, Torrents
 
 from movies.utilities.scrappers import Scrapper1337x
 from movies.utilities.helpers import get1337xSearchUrl
+from django.conf import settings
 
 
 
@@ -89,23 +90,17 @@ def add(request):
                 'imdbID': imdbID
             }
         )
-        print(f'Created New Entry: {created}')
         # Get providers
-        print('Getting Providers...')
         providers = get_providers(title)
         for item in providers:
             print(f'Adding {item}')
             prov_obj, created = Providers.objects.get_or_create(name=item)
             media.providers.add(prov_obj)
-
-        print('Updating genres...')
         for g in genre:
-            print(f'Adding: {g}')
             genre_obj, created = Genre.objects.get_or_create(name=g)
             media.genre.add(genre_obj)
         params = f'?success={media_type} added successfully'
     except Exception as e:
-        print(e)
         params = f'?error={e}'
 
     return HttpResponse(status=204)
@@ -121,9 +116,9 @@ def add_plex(request):
 def list_to_download(request):
     auth_key = request.headers.get("AUTH_KEY")
     
-    if auth_key == SECRET_KEY:
-        media = Torrents.objects.filter(status="READY")
-        data = serializers.serialize('json', media, fields=('pk', 'title'))
+    if auth_key == settings.API_SECRET_KEY:
+        torrents = Torrents.objects.filter()
+        data = serializers.serialize('json', torrents)
         return HttpResponse(data)
     return HttpResponse('Unauthorized', status=401)
 
@@ -136,3 +131,16 @@ def list_create_1337x_torrents(request):
         torrents, 
         safe=False
     )
+
+def create_torrent_download(request):
+    magnet = request.GET.get('magnet')
+    media_id = request.GET.get('mediaId')
+    if not magnet or not media_id:
+        return HttpResponseBadRequest()
+    media = Media.objects.get(pk=media_id)
+    torrent, wasCreated = Torrents.objects.get_or_create(media=media, defaults={"magnet": magnet, "status": "READY"})
+    if wasCreated is False:
+        torrent.magnet = magnet
+        torrent.save()
+        return HttpResponse(status=200)
+    return HttpResponse(status=204)
