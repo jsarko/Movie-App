@@ -265,6 +265,9 @@
 <!--  End side nav -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
+  var csrftoken = '{{ csrf_token }}';
+  console.log("CSRF TOKEN: ", csrftoken);
+
   $("#1337x-dropdown-trigger").click(() => {
     // When the accordian collapsible is clicked,
     // this function is triggered and will begin building
@@ -276,7 +279,28 @@
   function handleTorrentItem(url, mediaId){
     console.log("Clicked", url)
     console.log("MediaID4Real:", mediaId)
-    
+    const torrents = async () => {
+      const response = await fetch(`/download/add`, {
+        method: "POST",
+        body: JSON.stringify({magnet: url, mediaId: mediaId}),
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+        credentials: "same-origin",
+      });
+      if (response.status === 204 || response.status === 200) {
+        console.log("yay good things")
+        // Disaply success message
+        M.toast({ html: "Download added to queue", classes: "green" });
+        return response.json;
+      } else {
+        console.log("Promise Rejected");
+        M.toast({ html: "Failed to add media to queue. Fuck if I know why.", classes: "red" });
+        return Promise.reject(response);
+      }
+    };
+    torrents();
   }
 
   function torrents1337xDropdown(title) {

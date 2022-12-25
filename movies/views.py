@@ -133,8 +133,14 @@ def list_create_1337x_torrents(request):
     )
 
 def create_torrent_download(request):
-    magnet = request.GET.get('magnet')
-    media_id = request.GET.get('mediaId')
+    if request.method == 'POST':
+        dict_str = request.body.decode("UTF-8")
+        data = ast.literal_eval(dict_str)
+    else:
+        return HttpResponseBadRequest()
+    magnet = data.get('magnet')
+    media_id = data.get('mediaId')
+    print("Magnet:", magnet, "\nMediaId:", media_id)
     if not magnet or not media_id:
         return HttpResponseBadRequest()
     media = Media.objects.get(pk=media_id)
