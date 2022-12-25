@@ -70,6 +70,15 @@
     /* top: 0;
     right: 0; */
   }
+  .torrent-item {
+    padding: 0 5px 0 5px !important;
+    cursor: pointer;
+  }
+  a.nostyle:link {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: auto;
+}
 </style>
 {% if success or error %}
 <span class="msgBox yellow orange-text text-darken-3 darken-1">{{success}}{{error}}</span>
@@ -190,7 +199,7 @@
         href="#"
         data-target="slide-out"
         class="sidenav-trigger"
-        onclick="setupTorrentMenu('{{item.title}}')"
+        onclick="setupTorrentMenu('{{item.title}}', '{{item.id}}')"
       >
         <i class="material-icons yellow-text text-darken-3">file_download</i>
       </a>
@@ -228,7 +237,7 @@
       </div>
       <br />
       <br />
-      <span class="white-text title"></span>
+      <span id="" class="white-text title"></span>
     </div>
   </li>
   <!-- Collapsible -->
@@ -246,7 +255,7 @@
       <div class="collapsible-header">
         <i class="material-icons">place</i>
         RARGB
-      </div>
+      </div>  
       <div class="collapsible-body blue darken-4"><span>Lorem ipsum dolor sit amet.</span></div>
     </li>
   </ul>
@@ -264,6 +273,12 @@
     torrents1337xDropdown(mediaTitle);
   });
 
+  function handleTorrentItem(url, mediaId){
+    console.log("Clicked", url)
+    console.log("MediaID4Real:", mediaId)
+    
+  }
+
   function torrents1337xDropdown(title) {
     // Fetches torrents by title and year released
     // and updates the 1337x torrent accordian
@@ -280,8 +295,13 @@
       let torrent_html = "";
       data.map((torrent) => {
         if (torrent.title != undefined) {
+          const mediaId = $(".title").attr("id");
+          console.log("HandleID:", mediaId);
           let h = `
-                    <li class="collection-item blue darken-4">${torrent.title}</li>
+                    <li class="collection-item blue darken-4 torrent-item" onClick="handleTorrentItem('${torrent.torrent_url}', '${mediaId}')">
+                      <p>${torrent.title}</p>
+                      <p>Seeds: ${torrent.seeds}<span class="right">Size: ${torrent.size}</span></p>
+                    </li>
                     `;
           torrent_html += h;
         }
@@ -303,7 +323,7 @@
     $(".modal").modal("open");
   }
 
-  function setupTorrentMenu(title) {
+  function setupTorrentMenu(title, mediaId) {
     // Function sets up the slide out menu by clearing any previous
     // html in the accordian dropdowns, closing the accordian and setting title.
     // This would function more seemless if I moved the clear and close logic
@@ -311,6 +331,7 @@
     $("#1337x-dropdown").html();
     $(".collapsible").collapsible("close");
     $(".title").html(title);
+    $(".title").attr('id', mediaId)
   }
 
   function addAndDownload() {
@@ -339,7 +360,7 @@
     };
     torrents();
     // Step 2: Build slider menu
-    setupTorrentMenu(formObject["title"]);
+    setupTorrentMenu(formObject["title"], formObject['id']);
   }
   function convertToObject(unindexedArray) {
     //   Converts a serialized array to
@@ -350,5 +371,7 @@
     });
     return indexedArray;
   }
+
+
 </script>
 {% endblock %}
