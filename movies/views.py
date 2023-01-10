@@ -19,9 +19,14 @@ def list_movies(request):
     # TODO: Add cards/list view
     media_filter = request.GET.get('filter', 'all')
     chosen_genre = request.GET.get('genre')
-    media = Media.objects.filter(user=request.user.id)
+    user = request.user
+    if not user.is_authenticated:
+        return HttpResponseRedirect('/login')
+    media = Media.objects.filter(user=user.pk)
     if chosen_genre:
-        media = media.filter(genre_name=chosen_genre)
+        # Because of how the genre logic is written media can have duplicated relationships in
+        # the M2M table. Using distinct() corrects for this.
+        media = media.filter(genre__name=chosen_genre).distinct()
     context = {
         'success': request.GET.get('success', ''),
         'error': request.GET.get('error', ''),

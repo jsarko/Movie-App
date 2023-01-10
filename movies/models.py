@@ -22,6 +22,7 @@ class Providers(models.Model):
         ordering = ['name']
 
 class Media(models.Model):
+    # TODO: Move genre relationship to genre model with a onetomany to media
     imdbID = models.CharField(max_length=100, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
