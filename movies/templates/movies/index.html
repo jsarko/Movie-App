@@ -83,6 +83,11 @@
 {% if success or error %}
 <span class="msgBox yellow orange-text text-darken-3 darken-1">{{success}}{{error}}</span>
 {% endif %}
+{% if user.is_authenticated %}
+<p class="right">Hello, {{user.username}} <a href="/logout">(logout)</a></p>
+{% else %}
+<p class="right"><a href="/login">Log in</a></p>
+{% endif %}
 <h3>Movies</h3>
 <form action="{% url 'movies:lookup' %}">
   <div class="input-field col s6">

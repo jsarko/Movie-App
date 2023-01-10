@@ -16,14 +16,12 @@ from django.conf import settings
 
 
 def list_movies(request):
+    # TODO: Add cards/list view
     media_filter = request.GET.get('filter', 'all')
     chosen_genre = request.GET.get('genre')
+    media = Media.objects.filter(user=request.user.id)
     if chosen_genre:
-        # genre_obj = Genre.objects.get(name=chosen_genre)
-        media = Media.objects.filter(genre_name=chosen_genre).all()
-    else:
-        media = Media.objects.all()
-
+        media = media.filter(genre_name=chosen_genre)
     context = {
         'success': request.GET.get('success', ''),
         'error': request.GET.get('error', ''),
