@@ -1,0 +1,57 @@
+<form action="{% url 'movies:lookup' %}">
+    <div class="input-field col s6">
+      <input type="text" name="title" class="white-text" />
+      <label for="search" class="white-text">Search</label>
+    </div>
+    <input type="submit" name="submit" class="btn blue" />
+</form>
+
+{% if data.Title %}
+<div class="row results">
+  <div class="col l2 m4 s6">
+    <img src="{{data.Poster}}" alt="" />
+  </div>
+  <div class="col l10">
+    <h5>{{data.Title}} | {{data.Year}} | {{data.Runtime}}</h5>
+    <h6>{{data.Genre}}</h6>
+    <p>{{data.Plot}}</p>
+    <form action="{% url 'movies:add' %}">
+      {%csrf_token%}
+      <!-- Hidden Fields -->
+      <input type="hidden" name="title" value="{{data.Title}}" />
+      <input type="hidden" name="year" value="{{data.Year}}" />
+      <input type="hidden" name="runtime" value="{{data.Runtime}}" />
+      <input type="hidden" name="genre" value="{{data.Genre}}" />
+      <input type="hidden" name="plot" value="{{data.Plot}}" />
+      <input type="hidden" name="poster" value="{{data.Poster}}" />
+      <input type="hidden" name="rated" value="{{data.Rated}}" />
+      <input type="hidden" name="director" value="{{data.Director}}" />
+      <input type="hidden" name="actors" value="{{data.Actors}}" />
+      <input type="hidden" name="rating" value="{{data.imdbRating}}" />
+      <input type="hidden" name="media_type" value="{{data.Type}}" />
+      <input type="hidden" name="imdbID" value="{{data.imdbID}}" />
+      <!-- End Hidden -->
+
+      <button class="btn waves-effect waves-light green" type="submit" name="submit">
+        Add to List
+        <i class="material-icons right">add_box</i>
+      </button>
+      <a
+        href="#"
+        data-target="slide-out"
+        class="sidenav-trigger btn waves-effect waves-light yellow darken-4"
+        onclick="addAndDownload()"
+      >
+        Add & Download
+        <i class="material-icons right">cloud_download</i>
+      </a>
+    </form>
+  </div>
+</div>
+{% elif search %}
+<div class="row results">
+  <h5 style="padding: 10px">
+    Hmm, I couldnt find that. Make sure its spelt correctly and try, try, try, again.
+  </h5>
+</div>
+{% else %} {% endif %}

@@ -1,0 +1,81 @@
+<style>
+    .modal-content p {
+      font-family: arial;
+    }
+    .card-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    img {
+      height: 220px;
+    }
+    .results {
+      margin-top: 20px;
+      border: 2px solid #27719c;
+      border-radius: 5px;
+    }
+    .results .col {
+      margin-bottom: -4px;
+      padding: 10px;
+    }
+    .input-field.col label {
+      left: 0px;
+    }
+    a,
+    .btn {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+        "Helvetica Neue", sans-serif;
+    }
+    .msgBox {
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .media_list img {
+      height: 200px;
+    }
+    .media_list {
+      margin-top: 20px;
+    }
+    .media_item {
+      margin-right: 25px;
+      display: inline-block;
+    }
+    .providers {
+      display: inline-block;
+      position: absolute;
+      left: 249px;
+      top: 451px;
+    }
+    .card-content {
+      padding: 5px 0px !important;
+    }
+    .card {
+      height: 300px;
+    }
+    .card-title {
+      font-size: 15px !important;
+    }
+    .plex {
+      opacity: 20%;
+      filter: grayscale(100%);
+    }
+    .title {
+      font-size: 20px;
+    }
+    #toast-container {
+      top: 0 !important;
+      right: 0 !important;
+      /* top: 0;
+      right: 0; */
+    }
+    .torrent-item {
+      padding: 0 5px 0 5px !important;
+      cursor: pointer;
+    }
+    a.nostyle:link {
+      text-decoration: inherit;
+      color: inherit;
+      cursor: auto;
+  }
+  </style>

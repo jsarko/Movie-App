@@ -1,0 +1,59 @@
+{% load app_extras %}
+{% if filter == 'genre' %}
+<div class="row genre_sorted">
+  <ul>
+    {% for genre in genres %}
+    <li><h4>{{genre.name}}</h4></li>
+    <div class="row">
+      {% for item in media %} {% if genre.name|compare_genre:item %}
+      <div class="media_item">
+        <img src="{{item.poster}}" />
+        <p class="card-title">{{item.title}}</p>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+    {% endfor %}
+  </ul>
+</div>
+{% elif filter == 'all' %}
+<div style="margin-top: 20px" class="row show_all">
+  {% if chosen_genre %}
+  <h5>{{chosen_genre}}</h5>
+  {% endif %} {% for item in media %}
+  <div class="card col s6 m4 l2 black">
+    <div class="card-image waves-effect waves-block waves-light">
+      <img class="activator" src="{{item.poster}}" />
+    </div>
+    <div class="card-content">
+      <span class="card-title activator white-text">{{item.title}}</span>
+    </div>
+    <div class="card-reveal black">
+      <p>{{item.title}}</p>
+      <span class="card-title white-text text-darken-4 btn-floating btn-small grey darken-4 card-close">
+        <i class="material-icons">close</i>
+      </span>
+      {% for p in item.providers.all %}
+      <img src="{{p.logo}}" alt="{{p.name}}" style="height: 40px" />
+      {% empty %}
+      <label>Not available to stream</label>
+      {% endfor %}
+      <p>
+        <i class="material-icons white-text text-darken-3 left">access_time</i>
+        <span style="margin-left: -0.7em">{{item.runtime|toMinutesAndHours}}</span>
+      </p>
+      <a
+        href="#"
+        data-target="slide-out"
+        class="sidenav-trigger"
+        onclick="setupTorrentMenu('{{item.title}}', '{{item.id}}')"
+      >
+        <i class="material-icons yellow-text text-darken-3">file_download</i>
+      </a>
+      <a href="#info-modal" onclick="infoModal('{{item.title}}', '{{item.plot}}')">
+        <i class="material-icons yellow-text text-darken-3 right bottom">info</i>
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}

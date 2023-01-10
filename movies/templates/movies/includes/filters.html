@@ -1,0 +1,13 @@
+<h6>
+    Filter:
+    <a href="?filter=all">Show All</a>
+    -
+    <a href="?filter=genre">By Genre</a>
+</h6>
+<h6>
+    Genres: {% for genre in genres %} {% if forloop.last %}
+    <a href="?genre={{genre.name}}">{{genre.name}}</a>
+    {% else %}
+    <a href="?genre={{genre.name}}">{{genre.name}}</a>
+    - {% endif %} {% endfor %}
+</h6>
